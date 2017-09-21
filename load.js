@@ -53,5 +53,5 @@ const options={
 	key:fs.readFileSync("./cert/214192781080192.key"),
 	cert:fs.readFileSync("./cert/214192781080192.pem")
 }
-https.createServer(options,startServer).listen(443);
-con.listen(80);
+https.createServer(options,startServer).listen(8080);
+con.listen(8088);

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 var arr = {
 	"type": "question",
 
@@ -46,7 +46,7 @@ var arr = {
 };
 
 
-var conversationNode = document.querySelector(".conversation");
+var conversationNode = document.querySelector('.conversation');
 //elementClick();
 
 function Communication(initArr){
@@ -56,15 +56,15 @@ function Communication(initArr){
 	this.projectInit();
 }
 
-Object.defineProperty(Communication.prototype, "ignorePropArray", {
-	value: ["type", "next", "url"]
+Object.defineProperty(Communication.prototype, 'ignorePropArray', {
+	value: ['type', 'next', 'url', 'pattern']
 });
 
 Communication.prototype.projectInit = function() {
-	var headNode = document.querySelector("head");
-	var linkNode = document.createElement("link");
-	linkNode.rel = "stylesheet";
-	linkNode.href = "conversationOsar.css";
+	var headNode = document.querySelector('head');
+	var linkNode = document.createElement('link');
+	linkNode.rel = 'stylesheet';
+	linkNode.href = 'conversationOsar.css';
 	headNode.appendChild(linkNode);
 	var timer = setTimeout(function(){
 		this.conversationSkip();
@@ -75,91 +75,99 @@ Communication.prototype.projectInit = function() {
 };
 
 Communication.prototype.createProjectBody = function(){
-	var projectBodyNode = document.createElement("osar-body");
+	var projectBodyNode = document.createElement('osar-body');
 	this.conversationNode = projectBodyNode;
-	projectBodyNode.className = "conversation-body";
+	projectBodyNode.className = 'conversation-body';
 	conversationNode.appendChild(projectBodyNode);
 };
 
 Communication.prototype.createWarningToneNode = function(){
-	var audioNode = document.createElement("audio");
-	audioNode.src = "audio/msg.wav";
+	var audioNode = document.createElement('audio');
+	audioNode.src = 'audio/msg.wav';
 	this.warningToneNode = audioNode;
 };
 
 Communication.prototype.createVideoNode = function(){
-	var videoElm = document.createElement("video");
-	videoElm.className = "conversation-video"; 
+	var videoElm = document.createElement('video');
+	videoElm.className = 'conversation-video'; 
 	videoElm.autoplay = true;
 	return videoElm;
 };
 
 Communication.prototype.createAudioNode = function(){
-	var audioElm = document.createElement("audio");
-	audioElm.className = "conversation-audio";
+	var audioElm = document.createElement('audio');
+	audioElm.className = 'conversation-audio';
 	return audioElm;
 };
 
 Communication.prototype.createImageNode = function(){
-	var imageElm = document.createElement("img");
-	imageElm.className = "conversation-image";
-	return imageElm;
+	var imageElm = document.createElement('img');
+	imageElm.className = 'conversation-image';
+	return imageElm;	
+};
+
+
+Communication.prototype.createInputNode = function(){
+	var inputElm = document.createElement('input');
+	inputElm.type = 'text';
+	inputElm.className = 'conversation-input';
+	return inputElm;
 };
 
 Communication.prototype.readObj = function(obj) {
 	var type = typeof(obj);
-	if(type.toLowerCase()==="object"){
+	if(type.toLowerCase()==='object'){
 		this.storeObj = obj;
 		var arr = Object.keys(obj);
 		var domArr = [];
 		arr.map(function(data, index){
-			if(obj['type'] === "option"){
+			if(obj['type'] === 'option'){
 				if(this.ignorePropArray.indexOf(data) === -1){
-					var elem = document.createElement("osar-option");
-					elem.className = "conversation-option";
-					elem.addEventListener("click", this.optionClick.bind(this));
+					var elem = document.createElement('osar-option');
+					elem.className = 'conversation-option';
+					elem.addEventListener('click', this.optionClick.bind(this));
 					elem.innerHTML = data;
 					domArr.push(elem);
 				}
-			}else if(obj['type'] === "question" || obj['type'] === "statement"){
+			}else if(obj['type'] === 'question' || obj['type'] === 'statement'){
 				if(this.ignorePropArray.indexOf(data) === -1){
-					var elem = document.createElement("osar-question");
+					var elem = document.createElement('osar-question');
 					elem.innerHTML = data;
-					elem.className = "conversation-question";
+					elem.className = 'conversation-question';
 					domArr.push(elem); 
 
-					if(obj["type"]==="statement"){
+					if(obj['type']==='statement'){
 						var timer = setTimeout(function(){
 							this.conversationSkip(data);
 							clearTimeout(timer);
 						}.bind(this), 2500);
 					}else{
 						var timer = setTimeout(function(){
-							this.createInputTemplate(data);
+							this.createTextInputTemplate(data);
 							clearTimeout(timer);
 						}.bind(this), 2000);
 					}
 				}
-			}else if(obj['type'] === "video"){
-				if(data!=="type" && data !== "next"){
+			}else if(obj['type'] === 'video'){
+				if(data === 'url'){
 					var videoElm = this.createVideoNode();
 					videoElm.src = obj['url'];
 					domArr.push(videoElm);
-					if(obj["next"]){
+					if(obj['next']){
 						var timer = setTimeout(function(){
-							this.conversationSkip("next");
+							this.conversationSkip('next');
 							clearTimeout(timer);
 						}.bind(this), 2500);
 					}
 				}
-			}else if(obj["type"] === "image"){
-				if(data !== "type" && data !== "next"){
+			}else if(obj['type'] === 'image'){
+				if(data === 'url'){
 					var imageElm = this.createImageNode();
-					imageElm.src = obj["url"];
+					imageElm.src = obj['url'];
 					domArr.push(imageElm);
-					if(obj["next"]){
+					if(obj['next']){
 						var timer = setTimeout(function(){
-							this.conversationSkip("next");
+							this.conversationSkip('next');
 							clearTimeout(timer);
 						}.bind(this), 2500);
 					}
@@ -188,16 +196,16 @@ Communication.prototype.optionClick = function() {
 };
 
 Communication.prototype.createQuestion = function() {
-	var divNode = document.createElement("osar-container");  
+	var divNode = document.createElement('osar-container');  
 	var arr = this.readObj(this.storeObj);
 	arr.map(function(elem, index){
 		divNode.appendChild(elem);
 	});
-	divNode.className = "conversation-container";
+	divNode.className = 'conversation-container';
 	this.conversationNode.appendChild(divNode);
 
 	this.warningToneNode.play();
-	var questionNode = divNode.querySelector("osar-question");
+	var questionNode = divNode.querySelector('osar-question');
 	if(questionNode){
 		this.tableXStrech(questionNode);
 	}
@@ -207,16 +215,14 @@ Communication.prototype.createAnswer = function(){
 
 };
 
-
-
-Communication.prototype.createInputTemplate = function(data){
-	var inputContainer = document.createElement("osar-input");
-	inputContainer.className ="conversation-input";
+Communication.prototype.createTextInputTemplate = function(data){
+	var inputContainer = document.createElement('osar-input');
+	inputContainer.className ='conversation-input';
 	var inputElm = this.createTextarea();
 	var submitBtn = this.createBtn();
-	submitBtn.innerHTML = "S";
-	submitBtn.setAttribute("data-propname", data);
-	submitBtn.addEventListener("click", this.inputSubmit.bind(this));
+	submitBtn.innerHTML = 'S';
+	submitBtn.setAttribute('data-propname', data);
+	submitBtn.addEventListener('click', this.inputSubmit.bind(this));
 	inputContainer.appendChild(inputElm);
 	inputContainer.appendChild(submitBtn);
 	this.conversationNode.appendChild(inputContainer);
@@ -224,7 +230,7 @@ Communication.prototype.createInputTemplate = function(data){
 
 Communication.prototype.inputSubmit = function(){
 	var propname = event.target.dataset.propname;
-	var value = event.target.parentNode.querySelector("textarea").value;
+	var value = event.target.parentNode.querySelector('textarea').value;
 	event.target.parentNode.parentNode.removeChild(event.target.parentNode);
 	this.createAnswerTemplate(value);
 	this.conversationSkip(propname);
@@ -232,39 +238,39 @@ Communication.prototype.inputSubmit = function(){
 };
 
 Communication.prototype.createBtn = function(){
-	var btn = document.createElement("button");
-	btn.className = "conversation-btn";
+	var btn = document.createElement('button');
+	btn.className = 'conversation-btn';
 	return btn;
 };
 
 Communication.prototype.createTextarea = function(){
-	var inputElm = document.createElement("textarea");
-	inputElm.className= "conversation-textarea";
-	inputElm.addEventListener("focus", function(){
-		this.className= "conversation-textarea conversation-textarea-focus";
+	var inputElm = document.createElement('textarea');
+	inputElm.className= 'conversation-textarea';
+	inputElm.addEventListener('focus', function(){
+		this.className= 'conversation-textarea conversation-textarea-focus';
 	});
-	inputElm.addEventListener("blur", function(){
-		this.className = "conversation-textarea conversation-textarea-blur";
+	inputElm.addEventListener('blur', function(){
+		this.className = 'conversation-textarea conversation-textarea-blur';
 	});
 	return inputElm;
 };
 
 Communication.prototype.createAnswerTemplate = function(value){
-	var parentNode = document.createElement("osar-container");
-	parentNode.className = "conversation-container";
-	var childNode = document.createElement("osar-option");
-	childNode.className = "conversation-option conversation-option-clicked";
-	childNode.innerHTML = value==="" ? "..." : value;
+	var parentNode = document.createElement('osar-container');
+	parentNode.className = 'conversation-container';
+	var childNode = document.createElement('osar-option');
+	childNode.className = 'conversation-option conversation-option-clicked';
+	childNode.innerHTML = value==='' ? '...' : value;
 	parentNode.appendChild(childNode);
 	this.conversationNode.appendChild(parentNode);
 };
 
 Communication.prototype.createClickResults = function(sourceObj){
-	sourceObj.removeEventListener("click", this.optionClick);
-	var parentNode = document.createElement("osar-container");
-	parentNode.className = "conversation-container";
-	var childNode = document.createElement("osar-option");
-	childNode.className = "conversation-option conversation-option-clicked";
+	sourceObj.removeEventListener('click', this.optionClick);
+	var parentNode = document.createElement('osar-container');
+	parentNode.className = 'conversation-container';
+	var childNode = document.createElement('osar-option');
+	childNode.className = 'conversation-option conversation-option-clicked';
 	childNode.innerHTML = sourceObj.innerHTML;
 	parentNode.appendChild(childNode);
 	sourceObj.parentNode.parentNode.removeChild(sourceObj.parentNode);
@@ -274,11 +280,11 @@ Communication.prototype.createClickResults = function(sourceObj){
 Communication.prototype.tableXStrech = function(questionNode){
 	var offsetWidthEnd = questionNode.offsetWidth;
 	var innerHTML = questionNode.innerHTML;
-	questionNode.innerHTML= "...";
-	questionNode.style.width = questionNode.offsetWidth+"px";
+	questionNode.innerHTML= '...';
+	questionNode.style.width = questionNode.offsetWidth+'px';
 	var timer= setTimeout(function(){
 		questionNode.innerHTML = innerHTML;
-		questionNode.style.width = offsetWidthEnd+"px";
+		questionNode.style.width = offsetWidthEnd+'px';
 		clearTimeout(timer);
 	}, 1000);
 };
